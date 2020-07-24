@@ -2,21 +2,23 @@ package com.servlet.DAO;
 
 import com.servlet.DTO.BookDTO;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class BookDAO {
-    String driver = "com.mysql.jdbc.Driver";
-    String url = "jdbc:mysql://localhost:3306";
-    String user = "root";
-    String pass = "1234";
+
+    DataSource dataSource;
 
     public BookDAO(){
         try{
-            Class.forName(driver);
+            Context context = new InitialContext();
+            dataSource = (DataSource)context.lookup("java:comp/env/jdbc/mysqlDB");
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -29,7 +31,7 @@ public class BookDAO {
         ResultSet res = null;
 
         try{
-            con = DriverManager.getConnection(url, user, pass);
+            con = dataSource.getConnection();
             pstmt = con.prepareStatement("use book");
             pstmt.execute();
             pstmt.clearParameters();
@@ -64,7 +66,7 @@ public class BookDAO {
         PreparedStatement pstmt = null;
 
         try{
-            con = DriverManager.getConnection(url, user, pass);
+            con = dataSource.getConnection();
             pstmt = con.prepareStatement("use book");
             pstmt.execute();
             pstmt.clearParameters();
@@ -98,7 +100,7 @@ public class BookDAO {
         PreparedStatement pstmt = null;
 
         try {
-            con = DriverManager.getConnection(url, user, pass);
+            con = dataSource.getConnection();
             pstmt = con.prepareStatement("use book");
             pstmt.execute();
             pstmt.clearParameters();
